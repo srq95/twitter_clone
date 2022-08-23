@@ -11,6 +11,7 @@ import Profile from './Profile';
 import SettingsScreen from './settings';
 import Search from './Search';
 import Notification from './Notification';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 const Stack = createStackNavigator();
@@ -31,7 +32,11 @@ const HomeStackNavigator = () => {
 const TabNavigator = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home1" component={Home} />
+      <Tab.Screen name="Home1" component={Home} options={{
+        tabBarIcon: ({color, size}) => (
+          <FontAwesome name="home" size={size} color={color} />
+        )
+      }} />
       <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Notification" component={Notification} />
     </Tab.Navigator>
