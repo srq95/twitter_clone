@@ -11,7 +11,7 @@ import Profile from './Profile';
 import SettingsScreen from './settings';
 import Search from './Search';
 import Notification from './Notification';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -53,7 +53,7 @@ const TabNavigator = () => {
         component={Home}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome name="home" size={size} color={color} />
+            <Ionicons name="home" size={size} color={color} />
           ),
         }}
       />
@@ -62,7 +62,7 @@ const TabNavigator = () => {
         component={Search}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome name="search" size={size} color={color} />
+            <Ionicons name="search" size={size} color={color} />
           ),
         }}
       />
@@ -71,7 +71,7 @@ const TabNavigator = () => {
         component={Notification}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome name="bell" size={size} color={color} />
+            <Ionicons name="notifications" size={size} color={color} />
           ),
         }}
       />
