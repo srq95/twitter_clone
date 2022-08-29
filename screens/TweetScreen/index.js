@@ -3,11 +3,16 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
-const TweetScreen = () => {
+const TweetScreen = ({navigation}) => {
+
+  function gotoProfile() {
+    navigation.navigate('Profile');
+  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <TouchableOpacity style={styles.flexRow}>
+        <TouchableOpacity style={styles.flexRow} onPress={() => gotoProfile()}>
           <Image
             style={styles.avatar}
             source={{
@@ -131,5 +136,5 @@ const styles = StyleSheet.create({
   },
   spaceAround: {
     justifyContent: 'space-around',
-  }
+  },
 });
