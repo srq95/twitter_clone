@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -11,49 +11,29 @@ import {
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
+import axios from 'axios';
+import {formatDistanceToNowStrict} from 'date-fns';
+import locale from 'date-fns/locale/en-US';
+
+import formatDistance from '../../helpers/formatDistanceCustom';
+
 const Home = ({navigation}) => {
-  const Data = [
-    {
-      id: '1',
-      title: 'First Item',
-    },
-    {
-      id: '2',
-      title: 'Second Item',
-    },
-    {
-      id: '3',
-      title: 'Third Item',
-    },
-    {
-      id: '4',
-      title: 'Fourth Item',
-    },
-    {
-      id: '5',
-      title: 'Fifth Item',
-    },
-    {
-      id: '6',
-      title: 'Sixth Item',
-    },
-    {
-      id: '7',
-      title: 'Seventh Item',
-    },
-    {
-      id: '8',
-      title: 'Eight Item',
-    },
-    {
-      id: '9',
-      title: 'Ninth Item',
-    },
-    {
-      id: '10',
-      title: 'Tenth Item',
-    },
-  ];
+  const [Data, setData] = useState([]);
+
+  useEffect(() => {
+    getAllTweets();
+  }, []);
+
+  function getAllTweets() {
+    axios
+      .get('http://10.175.175.56:8080/api/tweets')
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   function gotoProfile() {
     navigation.navigate('Profile');
@@ -67,13 +47,13 @@ const Home = ({navigation}) => {
     navigation.navigate('New Tweet');
   }
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item: tweet}) => (
     <View style={styles.tweetContainer}>
       <TouchableOpacity onPress={() => gotoProfile()}>
         <Image
           style={styles.avatar}
           source={{
-            uri: 'https://reactnative.dev/img/tiny_logo.png',
+            uri: tweet.user.avatar,
           }}
         />
       </TouchableOpacity>
@@ -82,24 +62,26 @@ const Home = ({navigation}) => {
           style={styles.flexRow}
           onPress={() => gotoSingleTweet()}>
           <Text numberOfLines={1} style={styles.tweetName}>
-            {item.title}
+            {tweet.user.name}
           </Text>
           <Text numberOfLines={1} style={styles.tweetHandle}>
-            @srq95
+            @{tweet.user.username}
           </Text>
           <Text>&middot;</Text>
           <Text numberOfLines={1} style={styles.tweetHandle}>
-            9m
+            {/* {formatDistanceToNowStrict(new Date(tweet.created_at))} */}
+            {formatDistanceToNowStrict(new Date(tweet.created_at), {
+              locale: {
+                ...locale,
+                formatDistance,
+              },
+            })}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.tweetContentContainer}
           onPress={() => gotoSingleTweet()}>
-          <Text style={styles.tweetContent}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad
-          </Text>
+          <Text style={styles.tweetContent}>{tweet.body}</Text>
         </TouchableOpacity>
         <View style={styles.tweetEngagement}>
           <TouchableOpacity style={styles.flexRow}>
