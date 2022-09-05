@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Platform,
@@ -19,6 +20,8 @@ import formatDistance from '../../helpers/formatDistanceCustom';
 
 const Home = ({navigation}) => {
   const [Data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     getAllTweets();
@@ -29,10 +32,19 @@ const Home = ({navigation}) => {
       .get('http://10.175.175.56:8080/api/tweets')
       .then(response => {
         setData(response.data);
+        setIsLoading(false);
+        setIsRefreshing(false);
       })
       .catch(error => {
         console.log(error);
+        setIsLoading(false);
+        setIsRefreshing(false);
       });
+  }
+
+  function handleRefresh() {
+    setIsRefreshing(true);
+    getAllTweets();
   }
 
   function gotoProfile() {
@@ -122,12 +134,18 @@ const Home = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={Data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={() => <View style={styles.tweetSeparator} />}
-      />
+      {isLoading ? (
+        <ActivityIndicator style={{marginTop: 8}} size="large" color="gray" />
+      ) : (
+        <FlatList
+          data={Data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+          ItemSeparatorComponent={() => <View style={styles.tweetSeparator} />}
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
+        />
+      )}
 
       <TouchableOpacity
         style={styles.floatingButton}
