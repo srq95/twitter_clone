@@ -13,6 +13,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import axios from 'axios';
+import axiosConfig from '../../helpers/axiosConfig';
 import {formatDistanceToNowStrict} from 'date-fns';
 import locale from 'date-fns/locale/en-US';
 
@@ -30,8 +31,8 @@ const Home = ({navigation}) => {
   }, [page]);
 
   function getAllTweets() {
-    axios
-      .get(`http://10.175.175.56:8080/api/tweets?page=${page}`)
+    axiosConfig
+      .get(`/tweets?page=${page}`)
       .then(response => {
         if (page === 1) {
           setData(response.data.data);
@@ -68,8 +69,10 @@ const Home = ({navigation}) => {
     navigation.navigate('Profile');
   }
 
-  function gotoSingleTweet() {
-    navigation.navigate('Tweet Screen');
+  function gotoSingleTweet(tweetId) {
+    navigation.navigate('Tweet Screen', {
+      tweetId: tweetId,
+    });
   }
 
   function gotoNewTweet() {
@@ -89,7 +92,7 @@ const Home = ({navigation}) => {
       <View style={{flex: 1}}>
         <TouchableOpacity
           style={styles.flexRow}
-          onPress={() => gotoSingleTweet()}>
+          onPress={() => gotoSingleTweet(tweet.id)}>
           <Text numberOfLines={1} style={styles.tweetName}>
             {tweet.user.name}
           </Text>
@@ -109,7 +112,7 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.tweetContentContainer}
-          onPress={() => gotoSingleTweet()}>
+          onPress={() => gotoSingleTweet(tweet.id)}>
           <Text style={styles.tweetContent}>{tweet.body}</Text>
         </TouchableOpacity>
         <View style={styles.tweetEngagement}>
